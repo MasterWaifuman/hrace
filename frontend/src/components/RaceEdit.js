@@ -15,7 +15,7 @@ function RaceEdit() {
     const [title, setTitle] = useState("");
     const { state } = useLocation();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [horses, setHorses] = useState([]);
     const [checked, setChecked] = useState(false);
 
@@ -63,7 +63,7 @@ function RaceEdit() {
             const race = await (await fetch(`/races/${state.raceId}`)).json();
             setTitle(<h2>Edit Race</h2>)
             console.log(race.time)
-            if (race.time + ":00" < today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() && race.winner === 0) {
+            if (race.time + ":00" < today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() && !race.horses.includes(race.winner)) {
                 console.log(Math.random() * race.horses.length);
                 race.winner = race.horses[parseInt(Math.random() * race.horses.length)];
                 console.log(race.winner);
@@ -77,7 +77,7 @@ function RaceEdit() {
                 }).then((response) => {console.log(response)});
             }
             setItem(race);
-            setLoading(false)
+            setLoading(false);
         }
         const fetchHorses = async() => {
             setLoading(true);
@@ -89,7 +89,7 @@ function RaceEdit() {
             }
             setLoading(false);
         };
-        if (item.place === '' && state !== null && state.raceId !== 'new' && !loading){
+        if (item.place === '' && state !== null && state.raceId !== 'new'){
             fetchData();
             fetchHorses();
         }
@@ -113,7 +113,7 @@ function RaceEdit() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        }).then((response) => {console.log(response)});
+        }).then((response) => {console.log(response)}).then(navigate('/races'));
     };
 
     return <div>
@@ -151,7 +151,7 @@ function RaceEdit() {
                                 {horses.map((horse) => (
                                     <tr key={horse.id} style={{background: item.horses.includes(horse.id) ? 'lightgreen' : ''}}>
                                         <td>
-                                            <input className='form-check-input' name='betId' type='radio' id='betId' value={horse.id} onChange={(e) => handleChange(e)} disabled={item.horses.includes(horse.id) && item.horses.length > 1 ? false : true} defaultChecked={item.betId === horse.id ? true : checked}></input>
+                                            <input className='form-check-input' name='betId' type='radio' id='betId' value={horse.id} onChange={(e) => handleChange(e)} disabled={item.horses.includes(horse.id) && item.horses.length > 1 && !item.horses.includes(item.winner) ? false : true} defaultChecked={item.betId === horse.id ? true : checked}></input>
                                         </td>
                                         <td style={{whiteSpace: 'nowrap'}}>{item.winner === horse.id ? horse.name + " (Winner)" : horse.name}</td>
                                         <td>{horse.color}</td>
@@ -174,8 +174,9 @@ function RaceEdit() {
                         </Container>
                     </div>
                     <FormGroup>
-                        <Button color="primary" type="submit" onClick={saveRace}>Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/races">Cancel</Button>
+                        {!item.horses.includes(item.winner) && (
+                        <Button color="primary" type="submit" onClick={saveRace}>Save</Button>)}{' '}
+                        <Button color="secondary" tag={Link} to="/races">{item.horses.includes(item.winner) ? 'Back' : 'Cancel'}</Button>
                     </FormGroup>
                 </Form>
             </Container>
