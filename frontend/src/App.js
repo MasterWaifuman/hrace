@@ -11,10 +11,10 @@ function App() {
       <>
         <Router>
           <Routes>
-            <Route path='/' exact={true} element={<Home />}/>
-            <Route path='/races' exact={true} element={<RaceList />}/>
+            <Route path='/' element={<Home />}/>
+            <Route path='/races' element={<RaceList />}/>
             <Route path='/races/:id' element={<RaceEdit />}/>
-            <Route path='/horses' exact={true} element={<HorseList />}/>
+            <Route path='/horses' element={<HorseList />}/>
             <Route path='/horses/:id' element={<HorseEdit />}/>
           </Routes>
         </Router>

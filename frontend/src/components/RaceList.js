@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 function RaceList() {
     const [loading, setLoading] = useState(true)
-    const [races, setRaces] = useState({races: []});
+    const [races, setRaces] = useState([]);
 
     useEffect(() => {
         const fetchRaces = async() => {
@@ -18,8 +18,10 @@ function RaceList() {
             }
             setLoading(false);
         };
-        fetchRaces();
-    }, []);
+        if (races.length === 0 && loading) {
+            fetchRaces();
+        }
+    });
 
     const remove = async(e, id) => {
         e.preventDefault();

@@ -112,7 +112,7 @@ function RaceEdit() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        }).then((response) => {console.log(response)}).then(navigate('/races'));
+        }).then((response) => {console.log(response)}).then(navigate(-1));
     };
 
     return <div>
