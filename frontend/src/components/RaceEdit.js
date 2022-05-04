@@ -88,11 +88,11 @@ function RaceEdit() {
             }
             setLoading(false);
         };
-        if (item.place === '' && state !== null && state.raceId !== 'new'){
+        if (item.place === '' && state !== null && state.raceId !== 'new' && loading){
             fetchData();
             fetchHorses();
         }
-        if (horses.length === 0) {
+        if (horses.length === 0 && loading) {
             fetchHorses();
         }
     });
