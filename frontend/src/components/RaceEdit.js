@@ -63,9 +63,7 @@ function RaceEdit() {
             setTitle(<h2>Edit Race</h2>)
             console.log(race.time)
             if (race.time + ":00" < today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() && !race.horses.includes(race.winner)) {
-                console.log(Math.random() * race.horses.length);
                 race.winner = race.horses[parseInt(Math.random() * race.horses.length)];
-                console.log(race.winner);
                 fetch('/races' + (race.id ? '/' + race.id : ''), {
                     method: (race.id) ? 'PUT' : 'POST',
                     headers: {
@@ -102,17 +100,16 @@ function RaceEdit() {
         setItem({...item, [e.target.name]: value});
     };
 
-    const saveRace = (e) => {
+    const saveRace = async(e) => {
         e.preventDefault();
-        console.log(item);
-        fetch('/races' + (item.id ? '/' + item.id : ''), {
+        await fetch('/races' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        }).then((response) => {console.log(response)}).then(navigate(-1));
+        }).then((response) => {console.log(response); navigate(-1)});
     };
 
     return <div>
@@ -145,7 +142,7 @@ function RaceEdit() {
                                     <th width="40%">Actions</th>
                                 </tr>
                                 </thead>
-                                {!loading && (
+                                {!loading && horses.length > 0 && (
                                 <tbody>
                                 {horses.map((horse) => (
                                     <tr key={horse.id} style={{background: item.horses.includes(horse.id) ? 'lightgreen' : ''}}>

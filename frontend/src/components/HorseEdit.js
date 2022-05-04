@@ -28,17 +28,17 @@ function HorseEdit() {
         setItem({...item, [e.target.name]: value});
     };
 
-    const saveHorse = (e) => {
+    const saveHorse = async(e) => {
         e.preventDefault();
         console.log(item);
-        fetch('/horses' + (item.id ? '/' + item.id : ''), {
+        await fetch('/horses' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        }).then((response) => {console.log(response)}).then(navigate(-1));
+        }).then((response) => {console.log(response); navigate(-1)});
     };
 
     return <div>
