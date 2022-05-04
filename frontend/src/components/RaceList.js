@@ -18,10 +18,8 @@ function RaceList() {
             }
             setLoading(false);
         };
-        if (races.length === 0 && loading) {
-            fetchRaces();
-        }
-    });
+        fetchRaces();
+    }, []);
 
     const remove = async(e, id) => {
         e.preventDefault();
