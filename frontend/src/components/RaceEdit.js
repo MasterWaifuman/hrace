@@ -54,9 +54,9 @@ function RaceEdit() {
         }
         handleChange(e);
     }
-    const today = new Date();
 
     useEffect(() => {
+        const today = new Date();
         const fetchData = async() => {
             setLoading(true)
             const race = await (await fetch(`/races/${state.raceId}`)).json();
@@ -92,7 +92,7 @@ function RaceEdit() {
             fetchData();
             fetchHorses();
         }
-        else {
+        if (horses.length === 0) {
             fetchHorses();
         }
     });
