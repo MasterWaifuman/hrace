@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Input, Label, Table, ButtonGroup, Toast } from 'reactstrap';
+import { Button, Container, Form, FormGroup, Input, Label, Table, ButtonGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar.js';
-import HorseList from './HorseList.js';
 
 function RaceEdit() {
     const [item, setItem] = useState({
@@ -17,7 +16,7 @@ function RaceEdit() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [horses, setHorses] = useState([]);
-    const [checked, setChecked] = useState(false);
+    const [checked] = useState(false);
 
     const remove = async(e, id) => {
         e.preventDefault();
@@ -96,7 +95,7 @@ function RaceEdit() {
         else {
             fetchHorses();
         }
-    }, []);
+    });
 
     const handleChange = (e) => {
         const value = e.target.value;

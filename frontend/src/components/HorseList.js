@@ -1,13 +1,11 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'reactstrap';
 import AppNavbar from './AppNavbar.js';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function HorseList() {
     const [loading, setLoading] = useState(true)
     const [horses, setHorses] = useState({horses: []});
-    const { state } = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchHorses = async() => {

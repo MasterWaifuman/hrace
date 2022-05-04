@@ -1,12 +1,11 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'reactstrap';
 import AppNavbar from './AppNavbar.js';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function RaceList() {
     const [loading, setLoading] = useState(true)
     const [races, setRaces] = useState({races: []});
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRaces = async() => {
