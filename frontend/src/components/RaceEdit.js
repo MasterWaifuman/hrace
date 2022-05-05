@@ -59,41 +59,36 @@ function RaceEdit() {
         const today = new Date();
         const fetchData = async() => {
             setLoading(true)
-            const race = await (await fetch(`/races/${state.raceId}`)).json();
-            setTitle(<h2>Edit Race</h2>)
-            console.log(race.time)
-            if (race.time + ":00" < today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() && !race.horses.includes(race.winner)) {
-                race.winner = race.horses[parseInt(Math.random() * race.horses.length)];
-                fetch('/races' + (race.id ? '/' + race.id : ''), {
-                    method: (race.id) ? 'PUT' : 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(race),
-                }).then((response) => {console.log(response)});
-            }
-            setItem(race);
-            setLoading(false);
-        }
-        const fetchHorses = async() => {
-            setLoading(true);
             try {
                 await fetch('/horses')
                     .then(response => response.json()).then(data => setHorses(data));
             } catch(err) {
                 console.log(err);
             }
+            if(state !== null) {
+                const race = await (await fetch(`/races/${state.raceId}`)).json();
+                setTitle(<h2>Edit Race</h2>)
+                console.log(race.time)
+                if (race.time + ":00" < today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() && !race.horses.includes(race.winner)) {
+                    race.winner = race.horses[parseInt(Math.random() * race.horses.length)];
+                    await fetch('/races' + (race.id ? '/' + race.id : ''), {
+                        method: (race.id) ? 'PUT' : 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(race),
+                    }).then((response) => {console.log(response)});
+                }
+                if (race.horses.includes(race.winner) && race.winner === race.betId) {
+                    setTitle(<h2>Your horse won!</h2>)
+                }
+                setItem(race);
+            }
             setLoading(false);
-        };
-        if (item.place === '' && state !== null && state.raceId !== 'new' && loading){
-            fetchData();
-            fetchHorses();
         }
-        if (horses.length === 0 && loading) {
-            fetchHorses();
-        }
-    });
+        fetchData();
+    }, [state]);
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -142,7 +137,7 @@ function RaceEdit() {
                                     <th width="40%">Actions</th>
                                 </tr>
                                 </thead>
-                                {!loading && horses.length > 0 && (
+                                {!loading && (
                                 <tbody>
                                 {horses.map((horse) => (
                                     <tr key={horse.id} style={{background: item.horses.includes(horse.id) ? 'lightgreen' : ''}}>
@@ -153,7 +148,8 @@ function RaceEdit() {
                                         <td>{horse.color}</td>
                                         <td>
                                         <ButtonGroup>
-                                            <Button size="sm" color="success" onClick={(e) => participating(e, horse.id)}>Participating</Button>
+                                            {!item.horses.includes(item.winner) && (
+                                            <Button size="sm" color="success" onClick={(e) => participating(e, horse.id)}>Participating</Button>)}
                                             <Link 
                                                 to={`/horses/${horse.id}`}
                                                 state={{horseId: horse.id}}
